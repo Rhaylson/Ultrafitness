@@ -1,0 +1,69 @@
+<h1 class="text-secondary font-weight-bold mt-1 mb-4">Cliente: {{ cliente.nome }}</h1>
+<div class="row">
+    <div class="col-md-6">
+        {% if cliente.matricula != 0 %}
+            <h5>MATRÍCULA: <span>{{ cliente.matricula }}</span></h5>
+        {% else %}
+            <h5>MATRÍCULA: <span><a href="{% url "academia:matricular"%}">EFETUAR</a></span></h5>
+        {% endif %}
+    </div>
+    <div class="col-md-2">
+         {% if cliente.matricula != 0 %}
+            <h5>PLANO: <span>{{ cliente.matricula.plano.tipoplano }}</span></h5>
+        {% else %}
+            <h5>PLANO: <span></span></h5>
+        {% endif %}
+    </div>
+    <div class="col-md-4">
+        <h5> STATUS:
+            {% if cliente.matricula.status == "inativa" or cliente.matricula.status == "atrasada" or cliente.matricula.status == "cancelada" %}
+
+                <span class="status-error text-uppercase">
+                                {{ cliente.matricula.status }}
+                            </span>
+                {% elif cliente.matricula == 0 %}
+                <span class="status-error text-uppercase text-uppercase">não matriculado</span>
+            {% else %}
+                <span class="status-ok text-uppercase">
+                                {{ cliente.matricula.status }}
+                            </span>
+            {% endif %}
+        </h5>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <h5>
+            CPF: <span for="cpf" data-mask="000.000.000-00">{{ cliente.cpf }}</span>
+        </h5>
+    </div>
+    <div class="col-md-6">
+        <h5>IDENTIDADE: <span>{{ cliente.identidade }}</span></h5>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <h5>
+            DATA DE NASCIMENTO: <span data-mask="00/00/0000">{{ cliente.get_dataNascimento }}</span>
+        </h5>
+    </div>
+    <div class="col-md-6">
+        <h5>DATA DA MATRÍCULA: <span data-mask="00/00/0000">{{ cliente.matricula.get_dataMatricula }}</span>
+        </h5>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <h5>
+            TELEFONE: <span> {{ cliente.telefone }}</span>
+        </h5>
+    </div>
+    <div class="col-md-6">
+        <h5>
+            ENDEREÇO: <span> {{ cliente.endereco }}</span>
+        </h5>
+    </div>
+</div>

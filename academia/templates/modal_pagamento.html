@@ -1,0 +1,28 @@
+<div class="modal fade" id="modalPagamento" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Confirmar Pagamento</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body justify-content-center">
+                <form id="form-pagamento" method="POST" action="{% url "academia:registrar_pagamento" %}">
+                    {% csrf_token %}
+                    <input id="cpf" type="hidden" name="cpf" value="{{ cliente.cpf }}"/>
+                    <p class="text-primary">Matrícula:</p><input readonly id="matricula" name="matricula"
+                                                                 value="{{ cliente.matricula }}"/>
+                    <p class="text-primary m-1">Referência:</p> <input id="referencia" name="referencia" type="text" readonly/>
+                    <p class="text-primary m-1">Valor:</p>  <input type="text" name="valor"
+                                                               value="R${{ cliente.matricula.plano.valor }}"
+                                                               readonly/>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Confirmar Pagamento</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,66 @@
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <link type="text/css" rel="stylesheet" href="{% static 'css/bootstrap.css' %}"/>
+    <link type="text/css" rel="stylesheet" href="{% static 'css/style.css' %}"/>
+    <link type="text/css" rel="stylesheet" href="{% static 'css/datepicker.css' %}"/>
+
+</head>
+<body>
+<div id="base" class="container-fluid">
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <a href="{% url 'index' %}"><img src="{% static 'imagens/logo.png' %}" class="img-logo" alt="Ultrafitness"/></a>
+        </div>
+        {% if request.user.is_authenticated %}
+            <div class="float-right">
+                <p class="text-uppercase text-info">{{ request.user.username }} <a href="{% url "logout" %}">(Sair)</a>
+                </p>
+            </div>
+        {% endif %}
+    </div>
+
+    {% block menu %}
+
+    {% endblock %}
+
+    {% block conteudo %}
+
+    {% endblock conteudo %}
+
+    <div class="container-fluid text-center fixed-bottom">
+        <footer class="footer text-secondary">Todos os direitos reservados a Ultrafitness LTDA &copy;</footer>
+    </div>
+
+</div>
+</body>
+
+<script type="text/javascript" rel="script" src="{% static 'js/jquery.js' %}"></script>
+<script type="text/javascript" rel="script" src="{% static 'js/popper.min.js' %}"></script>
+<script type="text/javascript" rel="script" src="{% static 'js/bootstrap.js' %}"></script>
+<script type="text/javascript" rel="script" src="{% static  'js/mask.js' %}"></script>
+<script type="text/javascript" rel="script" src="{% static  'js/datepicker.js' %}"></script>
+<script type="text/javascript" rel="script" src="{% static 'js/datepicker.pt-BR.min.js' %}"></script>
+<script>$(document).ready(function () {
+    var language_code = $('html').attr('lang');
+    var datepicker = $.fn.datepicker.noConflict();
+    $.fn.bootstrapDP = datepicker;
+    $.fn.datepicker = datepicker;
+    $.fn.datepicker.defaults.language = "pt-BR";
+    $('.datepicker').datepicker({
+        autoclose: true
+    });
+});</script>
+
+{% block script %}
+
+{% endblock %}
+
+
+</html>

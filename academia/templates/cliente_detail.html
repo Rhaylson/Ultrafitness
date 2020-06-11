@@ -1,0 +1,227 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+    Dados do Cliente
+{% endblock %}
+
+{% block conteudo %}
+
+    {% if cliente %}
+        <div id="cliente_detalhe" class="container-fluid justify-content-center">
+        {% include "dados_cliente.html" %}
+        {% if cliente.matricula != 0 %}
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.tags == 'success' %}
+                        <div class="row alert alert-success alert-dismissible fade show" role="alert">
+                            <strong>{{ message }}.</strong>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% elif message.tags == 'error' %}
+                        <div class="row alert alert-danger alert-dismissible fade show" role="alert">
+                            <strong>{{ message }}.</strong>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            {% include "modal_pagamento.html" %}
+
+            <div class="row mt-5">
+                <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <a class="nav-item nav-link active" id="nav-pagamento-tab" data-toggle="tab"
+                           href="#nav-pagamento"
+                           role="tab"
+                           aria-controls="nav-pagamento">Pagamentos</a>
+                        <a class="nav-item nav-link" id="nav-ferias-tab" data-toggle="tab" href="#nav-ferias" role="tab"
+                           aria-controls="nav-ferias">Férias</a>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="tab-content" id="nav-tabContent">
+                {% include "nav_pagamentos.html" %}
+                {% include "nav_ferias.html" %}
+            </div>
+        {% endif %}
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block script %}
+    <script>
+    $( document ).ready(function() {
+        {% for message in messages %}
+            {% if not message.tags == "success" and not message.tags == "error"%}
+                $("#nav-ferias-tab").tab("show");
+                $("#ferias{{ message }}").collapse();
+            {% endif %}
+        {% endfor %}
+    });
+        //Modifica o campo referência de acordo com o pagamento selecionado pelo usuário.
+        function registrar(elemento, id) {
+            document.getElementById("referencia").value = id.split("-")[1];
+            $("#modalPagamento").modal("show");
+        }
+
+        //Verifica se todos os campos do modal pagamento estão preenchidos.
+        $("#form-pagamento").submit(function () {
+            var cpf = $("#cpf").val();
+            var mat = $("#matricula").val();
+            var ref = $("#referencia").val();
+            if (!(cpf && mat && ref)) {
+                alert('Verifique se todos os campos estão preenchidos.');
+                event.preventDefault();
+            }
+        });
+
+        function soma_dias(ano, parcela, q_dias) {
+            var soma = q_dias;
+            for (var i = 1; i < parcela; i++) {
+                var qdia = document.getElementById("qdia" + ano + "" + i).innerHTML;
+                soma = soma + parseInt(qdia);
+            }
+            return soma;
+        }
+
+        function limpar(ano) {
+            var confirmacao = confirm("Limpar todas as parcelas do ano?");
+            if (confirmacao) {
+                for (var i = 1; i <= 3; i++) {
+                    $("#di" + ano + (i)).datepicker("setDate", '');
+                    $("#df" + ano + (i)).datepicker("setDate", '');
+                    $("#di" + ano + (i)).val("");
+                    $("#df" + ano + (i)).val("");
+                    document.getElementById("qdia" + ano + "" + i).innerHTML = "";
+                }
+            }
+        }
+
+        function show_error(mensagem, ano) {
+
+            var ed = "erro_div"+ano;
+            var ea = "erro_datas"+ano;
+            var erro_div = document.getElementById(ed);
+            var erro_texto = document.getElementById(ea);
+            erro_div.style.display = "block";
+            erro_texto.innerHTML = mensagem;
+        }
+
+        function hidden_error(ano) {
+            var ed = "erro_div"+ano;
+            var ea = "erro_datas"+ano;
+            var erro_div = document.getElementById(ed);
+            var erro_texto = document.getElementById(ea);
+            erro_div.style.display = "none";
+            erro_texto.innerHTML = "";
+        }
+
+        function validar_datas(ano, parcela) {
+                var data_inicial =  $("#di" + ano + parcela).datepicker("getDate")
+                if (parcela > 1) {
+                    var data_final_anterior = $("#df" + ano + (parcela - 1)).datepicker("getDate");
+                    var result = new Date(data_final_anterior);
+                    result.setDate(result.getDate() + 1);
+                    if (data_inicial > result) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+                else {
+                    if (data_inicial.value == ""){
+                           return false;
+                         }
+                    }
+                return true;
+                }
+
+        function validar_periodo(elemento, ano) {
+                var data = elemento.datepicker("getDate");
+                var inicio_ferias = new Date(document.getElementById("inicio" + ano).value);
+                var fim_ferias = new Date(document.getElementById("fim" + ano).value);
+                var data_atual = new Date();
+
+                if (data > data_atual && data <= fim_ferias && data >= inicio_ferias) {
+                    return true;
+                }
+            return false;
+        }
+
+        function limpar_range(ano, parcela) {
+            var inicio = parseInt(parcela) + 1;
+            for (var i = inicio; i <= 3; i++) {
+                $("#di" + ano + i).datepicker("setDate", '');
+                $("#df" + ano + i).datepicker("setDate", '');
+                document.getElementById("qdia" + ano + i).innerHTML = "";
+            }
+        }
+
+        function checar_preenchimento(ano, parcela) {
+            var data_inicio = $("#di" + ano + (parcela)).val().trim();
+            var data_fim = $("#df" + ano + (parcela)).val().trim();
+
+            if (data_fim != "" && data_inicio != "") {
+                return true;
+            }
+            return false;
+        }
+
+        function mudar_valor(elemento, ano, parcela) {
+            hidden_error(ano);
+            var data_inicio = $("#di" + ano + parcela);
+            var data_fim = $("#df" + ano + parcela);
+            var qtd_dias = document.getElementById("qdia" + ano + parcela);
+
+            if (data_inicio.val() == elemento.value) {
+                elemento = data_inicio;
+            } else {
+                elemento = data_fim;
+            }
+
+            if (validar_periodo(elemento, ano)) {
+                if (validar_datas(ano, parcela)) {
+                    if (checar_preenchimento(ano, parcela)) {
+                        try {
+                            var diferenca = data_fim.datepicker("getDate") - data_inicio.datepicker("getDate");
+                            diferenca = (diferenca / (1000 * 3600 * 24)) + 1;//Converte ms em dias
+                            if (diferenca > 0 && diferenca <= 30) {
+                                var dias_total = soma_dias(ano, parcela, diferenca);
+                                if (dias_total <= 30) {
+                                    qtd_dias.innerHTML = diferenca;
+                                    hidden_error(ano);
+                                } else {
+                                    show_error("Verifique as datas. A soma em dias não pode ser superior a 30.", ano);
+                                    qtd_dias.innerHTML = "";
+                                    data_fim.datepicker("setDate", '');
+                                    $("#di" + ano + parcela).focus();
+                                }
+                            } else {
+                                show_error("O período de férias da parcela não pode ser superior a 30 dias.", ano);
+                                qtd_dias.innerHTML = "";
+                                data_fim.datepicker("setDate", '');
+                                $("#di" + ano + parcela).focus();
+                            }
+                        } catch (e) {
+                        }
+                    }
+                }else {
+                    show_error("Verifique se a data não seja adjacente à data final da parcela anterior.", ano);
+                    elemento.val("");
+                    qtd_dias.innerHTML = "";
+                }
+            } else {
+                show_error("Verifique se a data encontra-se dentro do período de marcação e que seja posterior à data atual.", ano);
+                elemento.val("");
+                qtd_dias.innerHTML = "";
+            }
+        }
+    </script>
+{% endblock %}

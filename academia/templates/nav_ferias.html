@@ -1,0 +1,57 @@
+<div class="tab-pane fade" id="nav-ferias" role="tabpanel" aria-labelledby="nav-ferias-tab">
+    {% if cliente.matricula.plano.tipoplano == "ANUAL" %}
+        {% for ano_ferias, parcelas in cliente.parcelas_ferias.items %}
+            <div class="row">
+                <div class="col-sm-10">
+                    <button class="btn btn-primary col-10" type="button" data-toggle="collapse"
+                            data-target="#ferias{{ ano_ferias }}" aria-expanded="false"
+                            aria-controls="ferias{{ ano_ferias }}">
+                        {{ ano_ferias }}
+                    </button>
+                    {% for f in ferias %}
+                        {% if f.anoReferencia == ano_ferias %}
+                            <p class="text-primary text-justify">Período de
+                                marcação: {{ f.dataInicioProgramacao | date:'d/m/Y' }}
+                                até {{ f.dataFimProgramacao | date:'d/m/Y' }}</p>
+                            <input type="hidden" id="inicio{{ f.anoReferencia}}"
+                                   value="{{ f.dataInicioProgramacao | date:'Y/m/d' }}"/>
+                            <input type="hidden" id="fim{{ f.anoReferencia}}"
+                                   value="{{ f.dataFimProgramacao | date:'Y/m/d' }}"/>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="collapse" id="ferias{{ ano_ferias }}">
+                <div style="padding-bottom: 8%;" class="card card-body">
+                    {% if cliente.matricula.status == "ativa" %}
+                        <div id="erro_div{{ ano_ferias }}" style="display: none;" class="row alert alert-warning alert-dismissible fade show" role="alert">
+                            <p id="erro_datas{{ ano_ferias }}"></p>
+                        </div>
+                        <form id="form_ferias{{ ano_ferias }}" action="{% url "academia:registrar_ferias" %}"
+                              method="post">
+                            <input type="hidden" name="cpf" value="{{ cliente.cpf }}"/>
+                            <input type="hidden" name="matricula" value="{{ cliente.matricula }}"/>
+                            <input type="hidden" name="ano" value="{{ ano_ferias }}"/>
+
+                            {% csrf_token %}
+                            {% include "ferias_list_enabled.html" %}
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <input type="submit" id="btn{{ ano_ferias }}1" value="Salvar"
+                                           class="button btn-primary"/>
+                                    <input type="button" id="btn_c{{ ano_ferias }}1" value="Limpar"
+                                           class="button btn-danger" onclick="limpar('{{ ano_ferias }}')"/>
+                                </div>
+                            </div>
+                        </form>
+                    {% else %}
+                        {% include "ferias_list_show.html" %}
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <h4 class="text-primary mt-3">Planos Mensais não permitem a marcação de férias.</h4>
+    {% endif %}
+</div>

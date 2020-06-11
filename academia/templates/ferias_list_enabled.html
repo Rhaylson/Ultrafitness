@@ -1,0 +1,38 @@
+<div class="row">
+    <div class="col-md-3">
+        <p class="text-primary">Parcela</p>
+    </div>
+    <div class="col-md-3">
+        <p class="text-primary">Data de Inicio</p>
+    </div>
+    <div class="col-md-3">
+        <p class="text-primary">Data Fim</p>
+    </div>
+    <div class="col-md-3">
+        <p class="text-primary">Dias</p>
+    </div>
+</div>
+{% for p, valor in parcelas.items %}
+    <div class="row">
+        <div class="col-md-3">
+            <span id="p{{ ano_ferias }}{{ p }}">{{ p }}</span>
+        </div>
+        <div class="col-md-3 date input-group">
+            <input id="di{{ ano_ferias }}{{ p }}" name="di{{ ano_ferias }}{{ p }}"
+                   type="text" data-mask="00/00/0000" data-provide="datepicker" class="datepicker"
+                   value="{{ valor.inicio | date:'d/m/Y'}}" onchange="mudar_valor(this, '{{ ano_ferias }}','{{ p }}')"
+                   placeholder="__/__/____"
+            />
+        </div>
+        <div class="col-md-3 date input-group">
+            <input id="df{{ ano_ferias }}{{ p }}" name="df{{ ano_ferias }}{{ p }}"
+                   type="text" data-mask="00/00/0000" data-provide="datepicker" class="datepicker"
+                   value="{{valor.fim | date:'d/m/Y'}}"  onchange="mudar_valor(this, '{{ ano_ferias }}','{{ p }}')"
+                   placeholder="__/__/____"
+            />
+        </div>
+        <div class="col-md-3">
+            <span id="qdia{{ ano_ferias }}{{ p }}">{{ valor.dias }}</span>
+        </div>
+    </div>
+{% endfor %}

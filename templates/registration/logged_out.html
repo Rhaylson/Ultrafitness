@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Logout
+{%endblock%}
+
+{% block conteudo %}
+    <div class="m-5">
+        <a href="{% url "login" %}"><button type="button" class="btn btn-primary btn-md btn-block">Você saiu do Sistema. Clique aqui para refazer o login.</button></a>
+    </div>
+{%endblock  %}

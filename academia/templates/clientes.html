@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+    Cadastro de Clientes
+{% endblock %}
+
+{% block menu %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h5 class="font-weight-bold text-justify text-uppercase">Clientes</h5>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-7">
+                <form action="{% url 'academia:busca_nome' %}" method="post">
+                    {% csrf_token %}
+                    <input placeholder="Digite o nome do cliente" type="text" class="form-control" name="busca" id="busca"/>
+            </div>
+            <div class="col-lg-2">
+                <div class="form-group">
+                    <select class="form-control" id="tipo" name="tipo">
+                        <option value="todos">Todos</option>
+                        <option value="ativo">Matriculados</option>
+                        <option value="inativo">Sem Matrícula</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <input type="submit" value="PESQUISAR" class="btn btn-secondary" id="pesquisar"/>
+            </div>
+            </form>
+            <div class="float-right col-lg-1">
+                <div class="btn-group" role="group">
+                    <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        EFETUAR
+                    </button>
+                    <div style="background-color: #9fcdff;" class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                        <a href="{% url "academia:matricular" %}">MATRÍCULA</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% if messages %}
+                {% for message in messages %}
+                    {% if message.tags == 'success' %}
+                        <div class="row alert alert-success alert-dismissible fade show" role="alert">
+                            <strong>{{ message }}.</strong>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% else %}
+                         <div class="row alert alert-danger alert-dismissible fade show" role="alert">
+                            <strong>{{ message }}.</strong>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+        {% endif %}
+        {% include "cliente_list.html" %}
+    </div>
+{% endblock %}
+
+{% block conteudo %}
+
+{% endblock %}

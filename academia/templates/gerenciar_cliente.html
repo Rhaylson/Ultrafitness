@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Gerenciar Cliente {% endblock %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block conteudo %}
+    <div class="container div_cliente justify-content-center">
+        {% if form.errors %}
+             <div class="row alert alert-danger alert-dismissible fade show" role="alert">
+              {% for campo in form.visible_fields %}
+                            {{ campo.errors }}
+              {% endfor %}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                </div>
+        {% endif %}
+        <form id="form_user" action="{% url 'academia:adicionar_cliente' %}{% if cpf %}{{ cpf }}{% endif %}"
+              method="POST">
+            {% csrf_token %}
+            {% for campo in form.visible_fields %}
+
+                <div class="form-group row">
+                    <div class="col-sm-4">
+                        {{ campo.label_tag }}
+                    </div>
+                    <div class="col-sm-8">
+                        {% if campo.name == "cpf" and cpf %}
+                            {{ campo|attr:"readonly"|add_class:"form-control form-control-md" }}
+                            {% else %}
+                            {{ campo|add_class:"form-control form-control-md" }}
+                        {% endif %}
+                    </div>
+                 </div>
+            {% endfor %}
+
+            {% for campo_endereco in form_endereco.visible_fields %}
+                 <div class="form-group row">
+                    <div class="col-sm-4">
+                        {{ campo_endereco.label_tag }}
+                    </div>
+                    <div class="col-sm-8">
+                            {{ campo_endereco|add_class:"form-control form-control-md" }}
+                    </div>
+                 </div>
+            {% endfor %}
+
+            {% for hidden in form.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}
+
+            <div class="form-group row">
+                <div class="col-sm-6">
+                    <button type="submit" class="btn btn-success form-control">Salvar</button>
+                </div>
+                <div class="col-sm-6">
+                    <a href="{% url "academia:clientes" %}">
+                        <button type="button" class="btn btn-info form-control">Retornar</button>
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $("form#form_user").submit(function () {
+            var cpf = $('input[name="cpf"]').val().trim();
+            var nome = $('input[name="nome"]').val().trim();
+            var identidade = $('input[name="identidade"]').val().trim();
+            var telefone = $('input[name="telefone"]').val().trim();
+            var endereco = $('input[name="telefone"]').val().trim();
+            if (cpf && nome && identidade && telefone && endereco) {
+                $('input[name="cpf"]').unmask()
+            } else {
+                alert('Campos com valores Inválidos!')
+                alert(this.action)
+                event.preventDefault();
+            }
+        })
+    </script>
+{% endblock %}

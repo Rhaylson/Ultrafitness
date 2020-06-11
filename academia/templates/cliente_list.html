@@ -1,0 +1,48 @@
+{% load static %}
+
+<table class="table table-hover">
+        <thead>
+         <tr>
+             <th scope="col">#</th>
+             <th scope="col">CPF</th>
+             <th scope="col">NOME</th>
+             <th scope="col">TELEFONE</th>
+             <th scope="col">MATRÍCULA</th>
+        </tr>
+        </thead>
+        <tbody>
+            {% if clientes %}
+                {% for cliente in clientes %}
+            <tr>
+                 <th scope="row">
+                    <a href="{% url 'academia:clientes' %}{{ cliente.cpf }}"><img class="icone p-1" src="{% static "imagens/lupa.png" %}"/></a>
+                    <a href="{% url 'academia:adicionar_cliente' %}{{ cliente.cpf }}"><img class="icone p-1" src="{% static "imagens/editar.png" %}"/></a>
+                     {% if cliente.matricula == 0  %}
+                         <a href="{% url 'academia:excluir' %}{{ cliente.cpf }}" onclick="return confirm('Deletar o cliente: {{ cliente.nome }}?')"><img class="icone p-1" src="{% static "imagens/delete.png" %}"/></a>
+                     {% endif %}
+                 </th>
+                <td>
+                    <span data-mask="000.000.000-00">{{ cliente.cpf }}</span>
+                </td>
+                <td>
+                    {{ cliente.nome }}
+                </td>
+                <td>
+                    {{ cliente.telefone }}
+                </td>
+                <td class="justify-content-center">
+                    {% if cliente.matricula != 0 %}
+                        {{ cliente.matricula }}
+                        {% else %}
+                        Sem Matrícula
+                    {% endif %}
+                </td>
+            </tr>
+                {% endfor %}
+            {% else %}
+               <tr class="col">
+                   <td colspan="5" class="text-secondary "><h4>Nenhum cliente encontrado.</h4></td>
+               </tr>
+            {% endif %}
+        </tbody>
+</table>

@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Formulário de Matrícula
+{% endblock %}
+
+{% block conteudo %}
+    <div class="container div_form justify-content-center">
+
+        <form id="form_matricula" action="{% url "academia:matricular" %}" method="POST">
+            {% csrf_token %}
+            {% if erro %}
+                <div class="row alert alert-danger alert-dismissible fade show" role="alert">
+                            <strong>{{ erro }}</strong>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                </div>
+            {% endif%}
+              {% if messages %}
+                {% for message in messages %}
+                    {% if message.tags == 'success' %}
+                        <div class="row alert alert-success alert-dismissible fade show" role="alert">
+                            <strong>{{ message }}.</strong>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                {% endif %}
+            <div class="form-group row">
+                <div class="col-lg-3">
+                    <label for="cpf">CPF:</label>
+                </div>
+                <div class="col-lg-6">
+                    <input data-mask="000.000.000-00" type="text" name="cpf" readonly
+                           value={{ cliente.cpf }} class="form-control" id="cpf"/>
+                </div>
+                <div class="col-lg-2">
+                    <a id="adicionar" href="{% url "academia:adicionar_cliente" %}" hidden
+                       class="btn btn-primary btn-sm">
+                        <span class="glyphicon glyphicon-plus">+</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-lg-3">
+                    <label for="nome">NOME:</label>
+                </div>
+                <div class="col-lg-9">
+                    <input id="nome" autocomplete="off" value="{{ cliente.nome }}" type="text" name="nome"
+                           class="form-control" id="nome"/>
+                    <div id="clientes" class="list-group">
+                        <a href="#" class="list-group-item">Digite o nome ou CPF do Cliente.</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                {% if planos %}
+                    <div class="col-lg-3">
+                        <label for="modalidade">PLANO:</label>
+                    </div>
+                    <div class="col-lg-9">
+                        <select class="form-control" id="plano" name="plano" form="form_matricula">
+                            <option disabled selected value style="display:none;">Selecione um Plano</option>
+                            {% for plano in planos %}
+                                <option value="{{ plano.tipo }}">{{ plano.tipoplano }}</option>
+                            {% endfor %}
+                        </select>
+                        <h3 class="text-primary font-weight-bold m-2" id="plano_valor"></h3>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="form-group row">
+                <div class="col-md-6">
+                    <button type="submit" class="btn btn-success form-control">Matricular</button>
+                </div>
+                <div class="col-md-6">
+                    <a href="{% url "academia:clientes" %}">
+                        <button type="button" class="btn btn-info form-control">Retornar</button>
+                    </a>
+                </div>
+            </div>
+        </form>
+         {% for plano in planos %}
+             <input type="hidden" id="{{ plano.tipo }}" value="R$ {{ plano.valor }}"/>
+         {% endfor %}
+    </div>
+{% endblock %}
+
+
+{% block script %}
+    <script>
+        $(document).ready(function () {
+            if($("#cpf").val()!=''){
+                document.getElementById("clientes").innerHTML ="";
+            }
+            $("#nome").keyup(function () {
+                $("#cpf").val('');
+                var busca = $("#nome").val().trim();
+                if(busca !="" && busca.length >=3){
+                    if (busca.match(".*\\d.*")) {
+                        busca = busca.replace(/[^\d]/g, '');
+                    }
+                    $.ajax({
+                        url: '{% url "academia:busca_cliente" %}', data: {'busca': busca}, dataType: 'json',
+                        success: function (data) {
+                            if (data.clientes) {
+                                var clientes = data.clientes;
+                                mostrar_clientes(clientes);
+                            }
+                        }
+                    });
+                }else{
+                    limpar_busca();
+                }
+            }),
+                $('#plano').on('change', function () {
+                    valor = $(this).find(":selected").val();
+                    mudar_valor_plano(valor);
+                });
+        });
+
+        function mudar_valor_plano(valor) {
+            try {
+                plano = document.getElementById(valor);
+                if (plano != null) {
+                    document.getElementById("plano_valor").innerHTML = plano.value;
+                } else {
+                    document.getElementById("plano_valor").innerHTML = '';
+                }
+            } catch (e) {
+
+            }
+        }
+
+        function mostrar_clientes(clientes) {
+            var html = ""
+            if (Object.keys(clientes).length > 0) {
+                for (var cpf in clientes) {
+                    html = html + "<a id='" + cpf + "'href='#' class='list-group-item'  onclick='preencher(this);return false;'>" + mask_cpf(cpf) + " - <span>" + clientes[cpf] + "</span></a>";
+                    document.getElementById("clientes").innerHTML = html;
+                }
+            } else {
+                limpar_busca();
+            }
+        }
+
+        function limpar_busca(){
+            html = "<a href='{% url 'academia:adicionar_cliente' %}' class='list-group-item'>Nenhum Cliente Encontrado. Clique para Adicionar.</a>";
+            texto = document.getElementById("clientes").innerHTML;
+            if(html!=texto){
+                document.getElementById("clientes").innerHTML = html;
+            }
+        }
+
+        function mask_cpf(cpf) {
+            return cpf.substring(0, 3) + "." + cpf.substring(3, 6) + "." + cpf.substring(6, 9) + "-" + cpf.substring(9);
+        }
+
+        function preencher(elemento) {
+            document.getElementById("clientes").innerHTML = '';
+            cpf = elemento.id;
+            nome = elemento.childNodes[1].innerHTML;
+            $("#cpf").val(mask_cpf(cpf));
+            $("#nome").val(nome);
+        }
+        $("form#form_matricula").submit(function () {
+            var cpf = $('input[name="cpf"]').val().trim();
+            var plano = document.getElementById("plano_valor").innerHTML;
+            if (cpf && plano !='') {
+                $('input[name="cpf"]').unmask()
+            } else {
+                alert('Verifique se todos os campos estão preenchidos.')
+                event.preventDefault();
+            }
+        });
+    </script>
+{% endblock %}
+

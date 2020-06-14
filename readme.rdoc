@@ -1,0 +1,11 @@
+Tutorial de Execução em ambiente local
+
+1 - Baixar e instalar o python versão 3.
+2 - Instalar o pacote pip (https://pip.pypa.io/en/stable/installing/).
+3-  Criar um ambiente virtual utilizando o módulo Virtual env (https://docs.python.org/3/library/venv.html).
+4 - Ativar o ambiente virtual (activate) e navegar, no terminal, para a pasta do projeto.
+5 - Instalar as dependências do projeto utilizando o comando (pip install -r requirements.txt).
+6 - Rodar as migrações no banco de dados (python manage.py migrate).
+7 - Executar o comando de inicialização do banco (python manage.py configurar_app).
+8 - Executar o servidor de aplicação (python manage.py runserver).
+9 - Abrir a aplicação.

@@ -17,7 +17,7 @@ class Command(BaseCommand):
             usuario.groups.add(Group.objects.filter(name="Recepcionista").first())
             usuario.save()
 
-            print("Usuário recepcionista - recepcao@123")
+            print("Usuário recepcionista - 123")
 
             p1 = Plano.objects.get_or_create(tipo=Tipo.ANUAL, valor=500)
             p2 = Plano.objects.get_or_create(tipo=Tipo.MENSAL, valor=50)

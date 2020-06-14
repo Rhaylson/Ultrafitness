@@ -9,14 +9,7 @@
 
         <form id="form_matricula" action="{% url "academia:matricular" %}" method="POST">
             {% csrf_token %}
-            {% if erro %}
-                <div class="row alert alert-danger alert-dismissible fade show" role="alert">
-                            <strong>{{ erro }}</strong>
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                </div>
-            {% endif%}
+
               {% if messages %}
                 {% for message in messages %}
                     {% if message.tags == 'success' %}
@@ -26,6 +19,13 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
+                        {% elif message.tags == "error" %}
+                        <div class="row alert alert-danger alert-dismissible fade show" role="alert">
+                            <strong>{{ message }}</strong>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                         </div>
                     {% endif %}
                 {% endfor %}
                 {% endif %}
@@ -35,7 +35,7 @@
                 </div>
                 <div class="col-lg-6">
                     <input data-mask="000.000.000-00" type="text" name="cpf" readonly
-                           value={{ cliente.cpf }} class="form-control" id="cpf"/>
+                           value="{{ cliente.cpf }}" class="form-control" id="cpf"/>
                 </div>
                 <div class="col-lg-2">
                     <a id="adicionar" href="{% url "academia:adicionar_cliente" %}" hidden

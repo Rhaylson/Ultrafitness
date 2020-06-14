@@ -105,7 +105,6 @@
         }
 
         function show_error(mensagem, ano) {
-
             var ed = "erro_div"+ano;
             var ea = "erro_datas"+ano;
             var erro_div = document.getElementById(ed);
@@ -124,24 +123,26 @@
         }
 
         function validar_datas(ano, parcela) {
-                var data_inicial =  $("#di" + ano + parcela).datepicker("getDate")
+                var data_inicial =  $("#di" + ano + parcela);
+                var data_final =  $("#di" + ano + parcela);
+
+                if (data_inicial.val().trim()==""){
+                           return false;
+                }
+
                 if (parcela > 1) {
                     var data_final_anterior = $("#df" + ano + (parcela - 1)).datepicker("getDate");
                     var result = new Date(data_final_anterior);
                     result.setDate(result.getDate() + 1);
+                    data_inicial = data_inicial.datepicker("getDate");
                     if (data_inicial > result) {
                         return true;
                     } else {
                         return false;
                     }
                 }
-                else {
-                    if (data_inicial.value == ""){
-                           return false;
-                         }
-                    }
                 return true;
-                }
+        }
 
         function validar_periodo(elemento, ano) {
                 var data = elemento.datepicker("getDate");
@@ -152,7 +153,7 @@
                 if (data > data_atual && data <= fim_ferias && data >= inicio_ferias) {
                     return true;
                 }
-            return false;
+                return false;
         }
 
         function limpar_range(ano, parcela) {
@@ -179,6 +180,7 @@
             var data_inicio = $("#di" + ano + parcela);
             var data_fim = $("#df" + ano + parcela);
             var qtd_dias = document.getElementById("qdia" + ano + parcela);
+            qtd_dias.innerHTML = "";
 
             if (data_inicio.val() == elemento.value) {
                 elemento = data_inicio;
@@ -186,41 +188,43 @@
                 elemento = data_fim;
             }
 
-            if (validar_periodo(elemento, ano)) {
-                if (validar_datas(ano, parcela)) {
-                    if (checar_preenchimento(ano, parcela)) {
-                        try {
-                            var diferenca = data_fim.datepicker("getDate") - data_inicio.datepicker("getDate");
-                            diferenca = (diferenca / (1000 * 3600 * 24)) + 1;//Converte ms em dias
-                            if (diferenca > 0 && diferenca <= 30) {
-                                var dias_total = soma_dias(ano, parcela, diferenca);
-                                if (dias_total <= 30) {
-                                    qtd_dias.innerHTML = diferenca;
-                                    hidden_error(ano);
+            if (elemento.val() != "") {
+                if (validar_periodo(elemento, ano)) {
+                    if (validar_datas(ano, parcela)) {
+                        if (checar_preenchimento(ano, parcela)) {
+                            try {
+                                var diferenca = data_fim.datepicker("getDate") - data_inicio.datepicker("getDate");
+                                diferenca = (diferenca / (1000 * 3600 * 24)) + 1;//Converte ms em dias
+                                if (diferenca > 0 && diferenca <= 30) {
+                                    var dias_total = soma_dias(ano, parcela, diferenca);
+                                    if (dias_total <= 30) {
+                                        qtd_dias.innerHTML = diferenca;
+                                        hidden_error(ano);
+                                    } else {
+                                        show_error("Verifique as datas. A soma em dias não pode ser superior a 30.", ano);
+                                        qtd_dias.innerHTML = "";
+                                        data_fim.val("");
+                                        $("#di" + ano + parcela).focus();
+                                    }
                                 } else {
-                                    show_error("Verifique as datas. A soma em dias não pode ser superior a 30.", ano);
+                                    show_error("O período de férias da parcela é inválido.", ano);
                                     qtd_dias.innerHTML = "";
-                                    data_fim.datepicker("setDate", '');
+                                    data_fim.val("");
                                     $("#di" + ano + parcela).focus();
                                 }
-                            } else {
-                                show_error("O período de férias da parcela não pode ser superior a 30 dias.", ano);
-                                qtd_dias.innerHTML = "";
-                                data_fim.datepicker("setDate", '');
-                                $("#di" + ano + parcela).focus();
+                            } catch (e) {
                             }
-                        } catch (e) {
                         }
+                    } else {
+                        show_error("A data informada não é válida.", ano);
+                        elemento.val("");
+                        qtd_dias.innerHTML = "";
                     }
                 }else {
-                    show_error("Verifique se a data não seja adjacente à data final da parcela anterior.", ano);
+                    show_error("Verifique se a data encontra-se dentro do período de marcação.", ano);
                     elemento.val("");
                     qtd_dias.innerHTML = "";
                 }
-            } else {
-                show_error("Verifique se a data encontra-se dentro do período de marcação e que seja posterior à data atual.", ano);
-                elemento.val("");
-                qtd_dias.innerHTML = "";
             }
         }
     </script>

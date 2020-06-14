@@ -236,6 +236,13 @@ class Ferias(models.Model):
         verbose_name = 'Férias'
         verbose_name_plural = 'Férias'
 
+    def clean(self):
+        super().clean()
+        if self.dataInicioProgramacao != date(self.anoReferencia, 1, 1) \
+                or self.dataFimProgramacao != date(self.anoReferencia, 12, 31):
+
+            raise ValidationError("Período Inválido")
+
 
 class Matricula(models.Model):
     matricula = models.AutoField(primary_key=True)
@@ -387,7 +394,7 @@ class Matricula(models.Model):
 
 
 class Parcela(models.Model):
-    parcela = models.CharField(max_length=15, primary_key=True)
+    parcela = models.CharField(max_length=15)
     matricula = models.ForeignKey(Matricula, on_delete=models.CASCADE)
     ferias = models.ForeignKey(Ferias, on_delete=models.CASCADE, default=None)
     dataInicio = models.DateField()

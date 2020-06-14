@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import Http404
 from django.contrib.auth import logout
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib import messages
 from django.http import JsonResponse
@@ -115,10 +115,16 @@ def realizar_matricula(request):
     if request.method == 'POST':
         cpf = request.POST['cpf']
         plano = request.POST['plano']
-        cliente = get_object_or_404(Cliente, pk=cpf)
-        plano = get_object_or_404(Plano, pk=plano)
+        nome = request.POST['nome']
+        try:
+            cliente = get_object_or_404(Cliente, pk=cpf)
+            plano = get_object_or_404(Plano, pk=plano)
+        except Http404:
+            messages.error(request, "Dados da matrícula inválidos")
+            context = {'planos': lista_planos}
+            return render(request, 'realizar_matricula.html', context)
 
-        if cliente and plano and cliente.matricula == 0:
+        if cliente.matricula == 0 and cliente.nome == nome:
             matricula = Matricula()
             matricula.cliente = cliente
             matricula.plano = plano
@@ -127,7 +133,12 @@ def realizar_matricula(request):
             messages.success(request, 'Matrícula Realizada com Sucesso')
             return redirect("academia:cliente", cpf)
         else:
-            context = {'cliente': cliente, 'planos': lista_planos, 'erro': "O cliente já possui matrícula ativa!"}
+            if cliente.nome != nome:
+                messages.error(request, "Nome do cliente não correspondente")
+                context = {'cliente': cliente, 'planos': lista_planos}
+            if cliente.matricula != 0:
+                messages.error(request, "O cliente já possui uma matrícula ativa")
+                context = {'cliente': cliente, 'planos': lista_planos}
             return render(request, 'realizar_matricula.html', context)
     context = {'planos': lista_planos}
     return render(request, 'realizar_matricula.html', context)

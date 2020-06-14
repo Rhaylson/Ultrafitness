@@ -2,36 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ac04571e-0d3c-425d-b768-a65ea11c39c4" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/academia/management/commands/configurar_app.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/academia/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/academia/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/academia/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/academia/migrations/0002_auto_20200403_1639.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/academia/migrations/0003_pessoa_fisica_telefone.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/academia/migrations/0004_auto_20200404_2155.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/academia/migrations/0005_auto_20200405_0935.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/academia/migrations/0006_auto_20200405_0939.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/academia/migrations/0007_auto_20200405_2116.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/academia/migrations/0008_auto_20200405_2322.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/academia/migrations/0009_pagamento_referencia.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/academia/migrations/0010_auto_20200407_1032.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/academia/migrations/0011_auto_20200407_1035.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/academia/migrations/0012_auto_20200407_1036.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/academia/migrations/0013_remove_pagamento_referencia.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/academia/migrations/0014_pagamento_referencia.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/academia/migrations/0015_auto_20200407_1038.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/academia/migrations/0016_remove_pagamento_referencia.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/academia/migrations/0017_pagamento_referencia.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/academia/migrations/0018_auto_20200407_1042.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/academia/migrations/0019_auto_20200410_1149.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/academia/migrations/0020_auto_20200410_1204.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/academia/migrations/0021_parcela_ferias.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/academia/migrations/0022_matricula_ferias.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/academia/migrations/0023_auto_20200517_1145.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/academia/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/academia/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/academia/templates/cliente_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/academia/templates/cliente_detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/academia/templates/realizar_matricula.html" beforeDir="false" afterPath="$PROJECT_DIR$/academia/templates/realizar_matricula.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/academia/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/academia/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ultrafitness/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/ultrafitness/settings.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -236,7 +207,7 @@
       <workItem from="1591792582987" duration="38055000" />
       <workItem from="1591903739954" duration="14963000" />
       <workItem from="1591991857428" duration="5337000" />
-      <workItem from="1592132044835" duration="16734000" />
+      <workItem from="1592132044835" duration="16988000" />
     </task>
     <servers />
   </component>
